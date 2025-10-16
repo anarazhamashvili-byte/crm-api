@@ -154,4 +154,6 @@ def refresh_data():
 
 # Refresh every 5 minutes
 while True:
+    refresh_data()
+    time.sleep(600)
     refresh_data
