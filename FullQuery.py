@@ -48,8 +48,8 @@ def insert_row(row, source):
                 product_name, city, branch, location_details, item_carrier, delivery_type,
                 order_ready_status, item_collection_note, order_status_1, tracking_code,
                 delivery_status_2, standard_deadline, status_update, failed_delivery_comment,
-                resend_date, comment_1, issue_date, status, source_sheet
-            ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                resend_date, delivery_time, comment_1, issue_date, status, source_sheet
+            ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
         """, (
             row.get('order_date'), row.get('order_number'), row.get('customer_name'), row.get('phone_number'),
             row.get('personal_id'), row.get('product_name'), row.get('city'), row.get('branch'),
@@ -57,7 +57,7 @@ def insert_row(row, source):
             row.get('order_ready_status'), row.get('item_collection_note'), row.get('order_status_1'),
             row.get('tracking_code'), row.get('delivery_status_2'), row.get('standard_deadline'),
             row.get('status_update'), row.get('failed_delivery_comment'), row.get('resend_date'),
-            row.get('comment_1'), row.get('issue_date'), row.get('status'), source
+            row.get('delivery_time'), row.get('comment_1'), row.get('issue_date'), row.get('status'), source
         ))
         return True
     except Exception as e:
@@ -83,7 +83,8 @@ def refresh_data():
         'სტანდარტული მიწოდების Deadline',
         'Status Update - ინიშნება საწყობიდან გატანის შემთხვევაში ან ნივთის ვერ ჩაბარება/მობრუნების შემთხვევაში',
         'ვერ ჩაბარების კომენტარი',
-        'განმეორებითი გაგზავნის თარიღი'
+        'განმეორებითი გაგზავნის თარიღი',
+        'დაგეგმილი მიწოდების საათი'
     ]
 
     try:
@@ -109,6 +110,7 @@ def refresh_data():
                 'status_update': safe_text(row['Status Update - ინიშნება საწყობიდან გატანის შემთხვევაში ან ნივთის ვერ ჩაბარება/მობრუნების შემთხვევაში']),
                 'failed_delivery_comment': safe_text(row['ვერ ჩაბარების კომენტარი']),
                 'resend_date': safe_date(row['განმეორებითი გაგზავნის თარიღი']),
+                'delivery_time': safe_str(row['დაგეგმილი მიწოდების საათი'], 200),
                 'source_sheet': 'orders'
             }
             if insert_row(mapped, 'orders'):
@@ -152,5 +154,4 @@ def refresh_data():
 
 # Refresh every 5 minutes
 while True:
-    refresh_data()
-    time.sleep(600)
+    refresh_data
